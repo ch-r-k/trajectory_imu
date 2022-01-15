@@ -26,36 +26,53 @@ function [Pr_top, Pr_bottom, Pr_front, Pr_back, Ps, Pimu] = my_RigidBody(size, s
     
     R = Rz*Ry*Rx;
     
+    % rigidbody
+    Pr_top(1,:) = [0 + width/2, 0 + length/2, 0 + high/2];
+    Pr_top(2,:) = [0 - width/2, 0 + length/2, 0 + high/2];
+    Pr_top(3,:) = [0 - width/2, 0 - length/2, 0 + high/2];
+    Pr_top(4,:) = [0 + width/2, 0 - length/2, 0 + high/2];
+    Pr_top(5,:) = [0 + width/2, 0 + length/2, 0 + high/2]; %close square
     
-    % rigidbody position
-    Pr_top(1,:) = [sx + width/2, sy + length/2, sz + high/2];
-    Pr_top(2,:) = [sx - width/2, sy + length/2, sz + high/2];
-    Pr_top(3,:) = [sx - width/2, sy - length/2, sz + high/2];
-    Pr_top(4,:) = [sx + width/2, sy - length/2, sz + high/2];
-    Pr_top(5,:) = [sx + width/2, sy + length/2, sz + high/2]; %close square
+    Pr_bottom(1,:) = [0 + width/2, 0 + length/2, 0 - high/2];
+    Pr_bottom(2,:) = [0 - width/2, 0 + length/2, 0 - high/2];
+    Pr_bottom(3,:) = [0 - width/2, 0 - length/2, 0 - high/2];
+    Pr_bottom(4,:) = [0 + width/2, 0 - length/2, 0 - high/2];
+    Pr_bottom(5,:) = [0 + width/2, 0 + length/2, 0 - high/2]; %close square
     
-    Pr_bottom(1,:) = [sx + width/2, sy + length/2, sz - high/2];
-    Pr_bottom(2,:) = [sx - width/2, sy + length/2, sz - high/2];
-    Pr_bottom(3,:) = [sx - width/2, sy - length/2, sz - high/2];
-    Pr_bottom(4,:) = [sx + width/2, sy - length/2, sz - high/2];
-    Pr_bottom(5,:) = [sx + width/2, sy + length/2, sz - high/2]; %close square
+    Pr_front(1,:) = [0 + width/2, 0 - length/2, 0 + high/2];
+    Pr_front(2,:) = [0 - width/2, 0 - length/2, 0 + high/2];
+    Pr_front(3,:) = [0 - width/2, 0 - length/2, 0 - high/2];
+    Pr_front(4,:) = [0 + width/2, 0 - length/2, 0 - high/2];
+    Pr_front(5,:) = [0 + width/2, 0 - length/2, 0 + high/2]; %close square
     
-    Pr_front(1,:) = [sx + width/2, sy - length/2, sz + high/2];
-    Pr_front(2,:) = [sx - width/2, sy - length/2, sz + high/2];
-    Pr_front(3,:) = [sx - width/2, sy - length/2, sz - high/2];
-    Pr_front(4,:) = [sx + width/2, sy - length/2, sz - high/2];
-    Pr_front(5,:) = [sx + width/2, sy - length/2, sz + high/2]; %close square
-    
-    Pr_back(1,:) = [sx + width/2, sy + length/2, sz + high/2];
-    Pr_back(2,:) = [sx - width/2, sy + length/2, sz + high/2];
-    Pr_back(3,:) = [sx - width/2, sy + length/2, sz - high/2];
-    Pr_back(4,:) = [sx + width/2, sy + length/2, sz - high/2];
-    Pr_back(5,:) = [sx + width/2, sy + length/2, sz + high/2]; %close square
+    Pr_back(1,:) = [0 + width/2, 0 + length/2, 0 + high/2];
+    Pr_back(2,:) = [0 - width/2, 0 + length/2, 0 + high/2];
+    Pr_back(3,:) = [0 - width/2, 0 + length/2, 0 - high/2];
+    Pr_back(4,:) = [0 + width/2, 0 + length/2, 0 - high/2];
+    Pr_back(5,:) = [0 + width/2, 0 + length/2, 0 + high/2]; %close square
     
     Pr_top = (R^(-1) * Pr_top.').';
     Pr_bottom = (R^(-1) * Pr_bottom.').';
     Pr_front = (R^(-1) * Pr_front.').';
     Pr_back = (R^(-1) * Pr_back.').';
+    
+    % rigidbody position
+    Pr_top(:,1) = sx + Pr_top(:,1);
+    Pr_top(:,2) = sy + Pr_top(:,2);
+    Pr_top(:,3) = sz + Pr_top(:,3);
+    
+    Pr_bottom(:,1) = sx + Pr_bottom(:,1);
+    Pr_bottom(:,2) = sy + Pr_bottom(:,2);
+    Pr_bottom(:,3) = sz + Pr_bottom(:,3);
+    
+    Pr_front(:,1) = sx + Pr_front(:,1);
+    Pr_front(:,2) = sy + Pr_front(:,2);
+    Pr_front(:,3) = sz + Pr_front(:,3);
+    
+    Pr_back(:,1) = sx + Pr_back(:,1);
+    Pr_back(:,2) = sy + Pr_back(:,2);
+    Pr_back(:,3) = sz + Pr_back(:,3);
+     
     
     % centre of gravity position
     Ps(1) = sx;
@@ -63,9 +80,13 @@ function [Pr_top, Pr_bottom, Pr_front, Pr_back, Ps, Pimu] = my_RigidBody(size, s
     Ps(3) = sz;
     
     % IMU position
-    Pimu(1) = sx + rx;
-    Pimu(2) = sy + ry;
-    Pimu(3) = sz + rz;
+    Pimu(1) = rx;
+    Pimu(2) = ry;
+    Pimu(3) = rz;
     
     Pimu = (R^(-1) * Pimu.').';
+        
+    Pimu(1) = sx + Pimu(1);
+    Pimu(2) = sy + Pimu(2);
+    Pimu(3) = sz + Pimu(3);
 end
