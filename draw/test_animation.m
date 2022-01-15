@@ -3,7 +3,7 @@ clear all
 close all
 clc
 
-%% define trajectorie
+%% define trajectory
 
 % time
 t_start = 0;
