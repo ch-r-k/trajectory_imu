@@ -1,4 +1,4 @@
-function [s_calc, v_calc, a_calc] = my_lin(s,option, t_)
+function [s_calc, v_calc, a_calc, phi_tz] = my_lin(s,option, t_)
     %f = @(x) sin(x);
     syms t;
     
@@ -23,9 +23,14 @@ function [s_calc, v_calc, a_calc] = my_lin(s,option, t_)
         temp(t) = diff(sym(sz),2);
         az = matlabFunction(temp);
         
+        % tangential angle
+        phi_tz =@(t) -atan2(vy(t), vx(t));
+        
+        % calc
         s_calc = zeros(length(t_),3);
         v_calc = zeros(length(t_),3);
         a_calc = zeros(length(t_),3);
+
         
         for it = 1:length(t_)
             s_calc(it,:) = [sx(t_(it))', sy(t_(it))', sz(t_(it))'];
