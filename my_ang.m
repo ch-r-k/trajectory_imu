@@ -8,9 +8,17 @@ function [phi_calc, omega_calc, alpha_calc] = my_ang(phi, option, t_)
         phiz = phi{3};
         
         % Rotation Matrix (z y x intrinsisch)
-        Rz = @(t) [cos(phiz(t)), -sin(phiz(t)), 0; sin(phiz(t)), cos(phiz(t)), 0; 0,0,1];
-        Ry = @(t) [cos(phiy(t)), 0, sin(phiy(t)); 0, 1, 0; 0, -sin(phiy(t)), cos(phiy(t))];
-        Rx = @(t) [1, 0, 0; 0, cos(phix(t)), -sin(phix(t)); 0, sin(phix(t)), cos(phix(t))];
+        Rz = @(t) [ cos(phiz(t)),   -sin(phiz(t)),  0;...
+                    sin(phiz(t)),   cos(phiz(t)),   0;...
+                    0,              0,              1];
+        
+        Ry = @(t) [ cos(phiy(t)),   0,  sin(phiy(t));...
+                    0,              1,  0;...
+                    -sin(phiy(t)),  0,  cos(phiy(t))];
+        
+        Rx = @(t) [ 1,  0,              0;...
+                    0,  cos(phix(t)),   -sin(phix(t));...
+                    0,  sin(phix(t)),   cos(phix(t))];
 
         R = @(t) Rz(t)*Ry(t)*Rx(t);
     
@@ -41,6 +49,7 @@ function [phi_calc, omega_calc, alpha_calc] = my_ang(phi, option, t_)
         alpha_calc = zeros(length(t_),3);
         
         for it = 1:length(t_)
+            
             % phi
             temp = phix(t_(it));
             phi_calc(it,1) = temp(1);
@@ -73,7 +82,65 @@ function [phi_calc, omega_calc, alpha_calc] = my_ang(phi, option, t_)
             
         end
         
-    elseif strcmp(option,"diff")
+    elseif strcmp(option,"num")
+        phix = phi(:,1);
+        phiy = phi(:,2);
+        phiz = phi(:,3);
+        
+        phi_calc = phi;
+        
+        % Rotation Matrix (z y x intrinsisch)
+        for it = 1:length(t_)
+            Rz =  [ cos(phiz(it)),   -sin(phiz(it)),  0;...
+                    sin(phiz(it)),   cos(phiz(it)),   0;...
+                    0,              0,              1];
+
+            Ry =  [ cos(phiy(it)),   0,  sin(phiy(it));...
+                    0,           1,  0;...
+                    -sin(phiy(it)),  0,  cos(phiy(it))];
+
+            Rx=  [  1,  0,           0;...
+                    0,  cos(phix(it)),   -sin(phix(it));...
+                    0,  sin(phix(it)),   cos(phix(it))];
+                
+            R(:,:,it) = Rz*Ry*Rx;
+        end
+        
+        % calc angular velocity
+        
+        dR11 = gradient(reshape(R(1,1,:),1,length(t_)),t_);
+        dR12 = gradient(reshape(R(1,2,:),1,length(t_)),t_);
+        dR13 = gradient(reshape(R(1,3,:),1,length(t_)),t_);
+        
+        dR21 = gradient(reshape(R(2,1,:),1,length(t_)),t_);
+        dR22 = gradient(reshape(R(2,2,:),1,length(t_)),t_);
+        dR23 = gradient(reshape(R(2,3,:),1,length(t_)),t_);
+        
+        dR31 = gradient(reshape(R(3,1,:),1,length(t_)),t_);
+        dR32 = gradient(reshape(R(3,2,:),1,length(t_)),t_);
+        dR33 = gradient(reshape(R(3,3,:),1,length(t_)),t_);
+        
+        omega_calc = zeros(length(t_),3);
+         
+        for it = 1:length(t_)
+            temp = reshape(R(:,:,it),3,3);
+            
+            dtemp = [dR11(it), dR12(it), dR13(it);...
+                	dR21(it), dR22(it), dR23(it);...
+                    dR31(it), dR32(it), dR33(it)];
+            
+            Omega = dtemp * temp^(-1);
+            
+            omega_calc(it,1) = -Omega(2,3);
+            omega_calc(it,2) =  Omega(1,3);
+            omega_calc(it,3) = -Omega(1,2);
+        end
+        
+        % calc angular acceleration
+        alpha_calc(:,1) = gradient(omega_calc(:,1),t_);
+        alpha_calc(:,2) = gradient(omega_calc(:,2),t_);
+        alpha_calc(:,3) = gradient(omega_calc(:,3),t_);
+        
     end
 end
 

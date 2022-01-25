@@ -28,10 +28,10 @@ classdef trajectory_tool
     % Public Methods
     %======================================================================
     methods (Access = public, Static = true)
-        function linear(t,s,phi,v,a,varargin)
+        function linear(t,s,phi,v,a,ta,varargin)
             
             [Pr_t, Pr_bo, Pr_f, Pr_b, Ps, Pimu] = my_RigidBody(trajectory_tool.sizeRB, s(1,:), phi(1,:), trajectory_tool.r);
-            
+            ta = 0.5.*ta;
             %==========================================================================
             figure;
             
@@ -48,6 +48,8 @@ classdef trajectory_tool
 
             h_s = animatedline(Ps(:,1),Ps(:,2),Ps(:,3),"marker","o");
             h_imu = animatedline(Pimu(:,1),Pimu(:,2),Pimu(:,3),"marker","o","color","red");
+            
+            h_t = animatedline([0,ta(1,1)],[0,ta(1,2)],[0,ta(1,3)],"color","blue");
             
             limit = trajectory_tool.limit;
             xlim(limit(1,:));
@@ -127,6 +129,7 @@ classdef trajectory_tool
             %h_slider.UserData.obj{idx_obj,1}.at     = h_at;
             
             h_slider.UserData.obj{idx_obj,1}.t      = t;
+            h_slider.UserData.obj{idx_obj,1}.ta     = ta;
             h_slider.UserData.obj{idx_obj,1}.s      = s;
             h_slider.UserData.obj{idx_obj,1}.phi    = phi;
             h_slider.UserData.obj{idx_obj,1}.v      = v;
@@ -135,6 +138,7 @@ classdef trajectory_tool
             h_slider.UserData.obj{idx_obj,1}.hst     = h_st;
             h_slider.UserData.obj{idx_obj,1}.hvt     = h_vt;
             h_slider.UserData.obj{idx_obj,1}.hat     = h_at;
+            h_slider.UserData.obj{idx_obj,1}.ht     = h_t;
         end
            
     end
@@ -188,7 +192,10 @@ classdef trajectory_tool
             h_vt = h_slider.UserData.obj{1}.hvt;  
             h_at = h_slider.UserData.obj{1}.hat;
             
+            h_t = h_slider.UserData.obj{1}.ht;
+            
             t = h_slider.UserData.obj{1}.t;
+            ta = h_slider.UserData.obj{1}.ta;
             s = h_slider.UserData.obj{1}.s;
             v = h_slider.UserData.obj{1}.v;
             a = h_slider.UserData.obj{1}.a;
@@ -208,13 +215,16 @@ classdef trajectory_tool
             clearpoints(h_rb3);
             clearpoints(h_rb4);
             clearpoints(h_imu);
+            clearpoints(h_t);
             
             h_s.addpoints(Ps(:,1),Ps(:,2),Ps(:,3)); 
             h_rb1.addpoints(Pr_t(:,1),Pr_t(:,2),Pr_t(:,3));     
             h_rb2.addpoints(Pr_bo(:,1),Pr_bo(:,2),Pr_bo(:,3)); 
             h_rb3.addpoints(Pr_f(:,1),Pr_f(:,2),Pr_f(:,3)); 
             h_rb4.addpoints(Pr_b(:,1),Pr_b(:,2),Pr_b(:,3));   
-            h_imu.addpoints(Pimu(:,1),Pimu(:,2),Pimu(:,3));   
+            h_imu.addpoints(Pimu(:,1),Pimu(:,2),Pimu(:,3)); 
+            
+            h_t.addpoints([0,ta(idx_t,1)],[0,ta(idx_t,2)],[0,ta(idx_t,3)]);   
             
             % sub 12 21 22
             clearpoints(h_st);
