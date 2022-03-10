@@ -17,13 +17,13 @@ t = (t_start:t_step:t_stop); % s
 f = 1; % Hz
 
 % Circle trajectory
-sx = @(t) (0.7 .* cos(2*pi*f*t)); % m
-sy = @(t) (0.7 .* sin(2*pi*f*t)); % m
-sz = @(t) (0.0 .* sin(2*pi*f*t)); % m
-
-phix = @(t) (0 .* t); % rad
-phiy = @(t) (0 .* t); % rad
-phiz = @(t) (0 .* t); % rad
+% sx = @(t) (0.7 .* cos(2*pi*f*t)); % m
+% sy = @(t) (0.7 .* sin(2*pi*f*t)); % m
+% sz = @(t) (0.0 .* sin(2*pi*f*t)); % m
+% 
+% phix = @(t) (0 .* t); % rad
+% phiy = @(t) (0 .* t); % rad
+% phiz = @(t) (0 .* t); % rad
 
 % Oszilation (Rotation)
 % sx = @(t) (0 .* t); % m
@@ -55,5 +55,3 @@ phi_num = [phix(t)', phiy(t)', phiz(t)'];
 %[s, vRef, aRef] = my_lin(s,"sym",t);
 [phi_sym, omega_sym, alpha_sym] = my_ang(phi_sym,"sym",t);
 [phi_num, omega_num, alpha_num] = my_ang(phi_num,"num",t);
-
-

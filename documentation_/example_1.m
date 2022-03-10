@@ -78,3 +78,10 @@ aRef = aRef + [0,0,9.81];
 %[aIMU] = my_imu(aB, omega, alpha, r, t);
 
 %% plot
+trajectory_tool.linear(t,s,phi_,vRef,aRef,ta);
+
+%% remove path
+
+%rmpath("draw/")
+%rmpath("mechanics/")
+%rmpath("tool/")

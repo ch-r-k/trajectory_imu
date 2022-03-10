@@ -3,7 +3,6 @@ clear all
 close all
 clc
 
-
 %% define trajectory
 
 % time
@@ -11,30 +10,13 @@ t_start = 0; % s
 t_stop = 5; % s
 t_step = 0.005; % s
 
-% trajectorie
 t = (t_start:t_step:t_stop); % s
 
+% frequency
 f = 1; % Hz
 
-% Circle trajectory
-% sx = @(t) (0.7 .* cos(2*pi*f*t)); % m
-% sy = @(t) (0.7 .* sin(2*pi*f*t)); % m
-% sz = @(t) (0.0 .* sin(2*pi*f*t)); % m
-% 
-% phix = @(t) (0 .* t); % rad
-% phiy = @(t) (0 .* t); % rad
-% phiz = @(t) (0 .* t); % rad
 
-% Oszilation (Rotation)
-%sx = @(t) (0 .* t); % m
-%sy = @(t) (0 .* t); % m
-%sz = @(t) (0 .* t); % m
-%
-%phix = @(t) (deg2rad(30)); % rad
-%phiy = @(t) (deg2rad(30)); % rad
-%phiz = @(t) (deg2rad(30) .* sin(2*pi*f*t)); % rad
-
-% 8 trajectory
+% wobly circle ------------------------------------------------------------
 sx = @(t) (0.8 .* cos(2*pi*f*t)); % m
 sy = @(t) (0.8 .* sin(2*pi*f*t)); % m
 sz = @(t) (0.3 .* cos(2*pi*3*f*t)); % m
@@ -43,7 +25,18 @@ phix = @(t) (0 .* t); % rad
 phiy = @(t) (0 .* t); % rad
 phiz = @(t) (0 .* t); % rad
 
-% Acceleration straight line
+
+% wobly 8 -----------------------------------------------------------------
+% sx = @(t) (0.8 .* cos(2*pi*f*t)); % m
+% sy = @(t) (0.8 .* sin(2*pi*f*t) * cos(2*pi*f*t)); % m
+% sz = @(t) (0.3 .* cos(2*pi*3*f*t)); % m
+% 
+% phix = @(t) (0 .* t); % rad
+% phiy = @(t) (0 .* t); % rad
+% phiz = @(t) (0 .* t); % rad
+
+
+% Acceleration straight line ----------------------------------------------
 % sx = @(t) (1 .* t^3); % m
 % sy = @(t) (0 .* t); % m
 % sz = @(t) (0 .* t); % m
@@ -56,6 +49,8 @@ phiz = @(t) (0 .* t); % rad
 
 s = [sx(t)',sy(t)',sz(t)'];
 phi = [phix(t)',phiy(t)',phiz(t)'];
+
+
 %% calculation
 % B ... body frame
 % Ref ... reference frame
@@ -74,17 +69,9 @@ aRef = aRef + [0,0,9.81];
 % angular
 [phi_calc, omega_B, alpha_B] = my_ang(phi_, 'num', t);
 
-
 % rotat linear Acceleration into Bodyframe
 [aB] = my_rotate(phi, aRef, t);
 
-[aIMU] = my_imu(aB, omega_B, alpha_B, [1,0,0], t);
-
-%% plot
-trajectory_tool.linear(t,s,phi_, vRef, aRef, ta);
-
-%% remove path
-
-%rmpath("draw/")
-%rmpath("mechanics/")
-%rmpath("tool/")
+% calculate IMU data
+r = [1,0,0]; %m distance form center of mass to imu
+[aIMU] = my_imu(aB, omega_B, alpha_B, r, t);
