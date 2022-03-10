@@ -9,12 +9,14 @@ function [phi_tz, phi_ty, phi_tx, ta] = my_tang(v, t)
     tz = vz ./ sqrt(vx.^2 + vy.^2 + vz.^2);
 
     ta = [tx,ty,tz];
-    
+   
     % yaw 
-    phi_tz = -atan2(ty, tx);
+    phi_tz = atan2(ty, tx);
 
     % pitch
-    phi_ty = (tx<=0) .* -asin(tz) + (tx>0) .* asin(tz);
+    t_xyz = sqrt(tx.^2 + ty.^2 + tz.^2);
+    
+    phi_ty = -asin(tz./t_xyz);
     
 
     %roll
