@@ -19,7 +19,7 @@ f = 1; % Hz
 % wobly circle ------------------------------------------------------------
 sx = @(t) (0.8 .* cos(2*pi*f*t)); % m
 sy = @(t) (0.8 .* sin(2*pi*f*t)); % m
-sz = @(t) (0.3 .* cos(2*pi*3*f*t)); % m
+sz = @(t) (0.3 .* cos(2*pi*f*t)); % m
 
 phix = @(t) (0 .* t); % rad
 phiy = @(t) (0 .* t); % rad
@@ -75,3 +75,16 @@ aRef = aRef + [0,0,9.81];
 % calculate IMU data
 r = [1,0,0]; %m distance form center of mass to imu
 [aIMU] = my_imu(aB, omega_B, alpha_B, r, t);
+
+%% plots
+
+body.width  = 150e-3;
+body.length = 150e-3;
+body.heigth = 50e-3;
+body.r = [-150e-3,-150e-3,50e-3]./2;
+
+figure
+tmr = my_traAnim(t, s, phi_, body);
+
+start(tmr);
+stop(tmr);

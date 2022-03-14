@@ -1,9 +1,24 @@
+# Bestimmung der linearen Größen (`my_lin`)
+
+## Syntax
+```Matlab
+[s_calc, v_calc, a_calc] = my_lin(s,option, t_)
+``` 
+
+## Description
+```Matlab
+[s_calc, v_calc, a_calc] = my_lin(s,option, t_)
+``` 
+
+## Algorithmus
+```Matlab
 function [s_calc, v_calc, a_calc] = my_lin(s,option, t_)
     %f = @(x) sin(x);
-    syms t;
-    syms phi_tys(t);
     
     if strcmp(option,"sym")
+        syms t;
+        syms phi_tys(t);
+    
         sx = s{1};
         sy = s{2};
         sz = s{3};
@@ -48,9 +63,9 @@ function [s_calc, v_calc, a_calc] = my_lin(s,option, t_)
         vz = gradient(sz,t_);
         
         % acceleration
-        ax = 4*del2(sx,t_);
-        ay = 4*del2(sy,t_);
-        az = 4*del2(sz,t_);
+        ax = gradient(vx,t_);
+        ay = gradient(vy,t_);
+        az = gradient(vz,t_);
         
         s_calc = [sx, sy, sz];
         v_calc = [vx, vy, vz];
@@ -59,3 +74,7 @@ function [s_calc, v_calc, a_calc] = my_lin(s,option, t_)
     end
 end
 
+
+```
+
+## Examples

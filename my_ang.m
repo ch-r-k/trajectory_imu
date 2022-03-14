@@ -1,8 +1,10 @@
 function [phi_calc, omega_calc, alpha_calc] = my_ang(phi, option, t_)
     %f = @(x) sin(x);
-    syms t;
+    
     
     if strcmp(option,"sym")
+        syms t;
+        
         phix = phi{1};
         phiy = phi{2};
         phiz = phi{3};
