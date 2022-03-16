@@ -1,0 +1,17 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "md->dpf",
+            "type": "shell",
+            "command": "pandoc -V geometry:a4paper -V geometry:margin=2cm -V monofont=\"DejaVu Sans Mono\" -V monobackgroundcolor=#DCDCDC documentation.md -o test.pdf",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

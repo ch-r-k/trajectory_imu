@@ -1,3 +1,15 @@
+---
+title: "Title"
+date: \today
+author: "Author"
+bibliography: "bibliography.bib"
+link-citations: true
+urlcolor: "blue"
+geometry: margin=2cm
+---
+
+\newpage
+
 # IMU-Daten einer Trajektorie
 
 Im Folgenden soll ein Matlab-Tool vorgestellt werden, das es ermöglicht, anhand einer vorgegebenen Trajektorie und einer vorgegebenen Orientierung die Ausgangsdaten einer IMU (Inertialen Messeinheit) zu simulieren.
@@ -40,12 +52,14 @@ Die Inertiale Messeinheit ist dabei im Abstand $\vec{r}$ vom Schwerpunkt entfern
 r = [-75e-3, -75e-3, 25e-3]; % m
 ``` 
 
-Um dies zu Verdeutlichen wird in der nachfolgenden Abbildung die oben definierte Trajektorie abgebildet. 
+Um dies zu Verdeutlichen wird in der Abbildung \ref{fig:trajectory} die oben definierte Trajektorie abgebildet. 
+
+![Beispiel einer Trajektorie mit einer IMU \label{fig:trajectory}](img/01_trajectory/trajectory.pdf)
+
 Hierbei wird der starre Körper als rotes Dreieck dargestellt das sich entlang der Trajektorie fortbewegt.
 Die Orientierung des starren Körpers wurde so gewählt, dass er sich entlang des Tangentialvektors der Trajektorie ausrichtet.
 Der Schwerpunkt und die Position der IMU werden mit einem gelben und violetten Punkt markiert.
 
-![Alt text](output.gif)
 
 ## Grundlagen
 Bevor näher auf die Algorithmen eingegangen wird, werdend die Grundlagen beschrieben, die im Weiteren von Bedeutung sind. 
@@ -56,7 +70,7 @@ Weiters sind die folgenden Ableitungen dieser Größen von Bedeutung:
 * die Geschwindigkeit $\vec{v} = \dot{\vec{s}}$
 * die Winkelgeschwindigkeit $\vec{\omega} = \dot{\vec{\varphi}}$
 * die lineare Beschleunigung $\vec{a} = \dot{\vec{v}}$
-* die Winkelbeschleunigung $\vec{\alpha} = \dot{\vec{\omega}}$.
+* die Winkelbeschleunigung $\vec{\alpha} = \dot{\vec{\omega}}$
   
 Wobei $\dot{(\cdot)}$ die zeitliche Ableitung kennzeichnet.
 Die beschriebenen Größen lassen sich in lineare Größen (Weg $\vec{s}$, Geschwindigkeit $\vec{v}$, lineare Beschleunigung $\vec{a}$) und in Drehgrößen (Orientierung $\vec{\varphi}$, Winkelgeschwindigkeit $\vec{\omega}$, Winkelbeschleunigung $\vec{\alpha}$) unterteilen. 
@@ -87,11 +101,10 @@ $$
 $$
 Es wird unterschieden zwischen den klassischen Euler-Winkeln und den Tait-Bryan-Winkeln, wobei diese wieder in unterschiedliche Konventionen eingeteilt werden können.
 
+![Darstellung der Tait-Bryan-Winkel nach z-y-x (intrinsisch) Konvention \label{fig:euler_ang}](img/02_eulerangle/eulerangle.pdf)
+
 Die am häufigsten verwendete Konvention ist die $z$-$y$-$x$-Konvention (intrinsische Konvention), wobei $z$-$y$-$x$ die Reihenfolge der zu drehenden Achsen definiert. 
 Intrinsisch bedeutet, dass jeweils um die neu entstehende Achse gedreht wird.
-
-![Alt text](output.gif)
-
 Abbildung \ref{fig:euler_ang} zeigt schrittweise wie mit dieser Konvention Koordinatensysteme gedreht werden.
 Im Gegensatz zu intrinsischen Drehungen werden extrinsische Drehungen um die Achse des alten Koordinatensystems gedreht. 
 Jede intrinsische Drehung kann in eine extrinsische Drehung umgewandelt werden und vice versa.
@@ -124,14 +137,14 @@ $$
 		\end{bmatrix}
 	}_{\mathbf{R_x}(\varphi_x)}
 $$
-Um einen Vektor vom Inertialsystem $\mathbb{N}$ in das Körpersystem $\mathbb{B}$ (Rotation des Punktes) zu transformieren, wird der zu rotierende Vektor $\vec{v}_\mathbb{N} = (v_x, v_y, v_z)^T$ mit der Drehmatrix $\mathbf{R}(\vec{\varphi})$ multipliziert:
+Um einen Vektor vom Inertialsystem $\mathbb{N}$ in das Körpersystem $\mathbb{B}$ (Rotation des Punktes) zu transformieren, wird der zu rotierende Vektor $\vec{v}_{\mathbb{N}} = (v_x, v_y, v_z)^T$ mit der Drehmatrix $\mathbf{R}(\vec{\varphi})$ multipliziert:
 $$
-	\vec{v}_\mathbb{B} = \mathbf{R}(\vec{\varphi}) \cdot \vec{v}_\mathbb{N}
+	\vec{v}_{\mathbb{B}} = \mathbf{R}(\vec{\varphi}) \cdot \vec{v}_{\mathbb{N}}
 $$
 Die Preindizes geben dabei das Koordinatensystem des jeweiligen Vektors an.
 Soll ein Vektor vom Körpersystem in das Inertialsystem (Rotation des Koordinatensystems) transformiert werden, muss der zu rotierende Vektor mit der inversen Drehmatrix multipliziert werden:
 $$
-	\vec{v}_\mathbb{B} = \left(\mathbf{R}(\vec{\varphi})\right)^{-1} \cdot \vec{v}_\mathbb{N}
+	\vec{v}_{\mathbb{B}} = \left(\mathbf{R}(\vec{\varphi})\right)^{-1} \cdot \vec{v}_{\mathbb{N}}
 $$
 
 ### Bestimmung der abgeleiteten Größen
@@ -171,6 +184,173 @@ Die einzelnen Größen können folgendermaßen interpretiert werden:
 
 ## Funktionen
 Im Nachfolgendne werden die einzelnen Funktionen beschrieben, um Daten einer IMU zu bestimmen und darzustellen.
+
+### Lineare Größen `my_lin` <!-------------------------------------------------------------------------------------------->
+Mit der Funktion `my_lin` werden die lineare Geschwindigkeit $\vec{v}(t)$ und lineare Beschleunigung $\vec{a}(t)$ anhand der Trajektorie $\vec{s}(t)$ bestimmt.
+Dazu werden die Gleichungen xx und xx angewandt.
+
+#### Syntax
+`[s_calc, v_calc, a_calc] = my_lin(s, option, t_)`
+
+#### Parameter
+* `s` 3D-Vektor oder Cell mit 3 Vektorfunktionen der Trajektorie
+* `option` String: `'num'` oder `'sym'` zur auswahl für nummerische oder symbolische Berechnung 
+* `t_` 1D-Zeitvektor
+* `s_calc` Berechneter 3D-Vektor für die Trajektorie (im nummerischen fall ident mit `s`)
+* `v_calc` Berechneter 3D-Vektor für die lineare Geschwindigkeit
+* `a_calc` Berechneter 3D-Vektor für die lineare Beschleunigung
+
+#### Beispiel
+
+##### Nummerisch
+```Matlab
+% time
+t_start = 0; % s
+t_stop = 5; % s
+t_step = 0.005; % s
+
+t = (t_start:t_step:t_stop); % s
+
+% frequency
+f = 1; % Hz
+
+% trajectory
+sx = @(t) (0.8 * 5 .* cos(2*pi*f*t)); % m
+sy = @(t) (0.8 * 5 .* sin(2*pi*f*t)); % m
+sz = @(t) (0.3 * 5 .* cos(2*pi*f*t)); % m
+
+% calculate lineare
+[s, vRef, aRef] = my_lin(s,"num",t);
+```
+
+##### Symbolisch
+```Matlab
+% time
+t_start = 0; % s
+t_stop = 5; % s
+t_step = 0.005; % s
+
+t = (t_start:t_step:t_stop); % s
+
+% frequency
+f = 1; % Hz
+
+% trajectory
+sx = @(t) (0.8 .* cos(2*pi*f*t)); % m
+sy = @(t) (0.8 .* sin(2*pi*f*t)); % m
+sz = @(t) (0.3 .* cos(2*pi*f*t)); % m
+
+s = {sx, sy, sz};
+
+% calculate lineare
+[s, vRef, aRef] = my_lin(s,"sym",t);
+```
+
+### Tangentialwinkel `my_tang` <!-------------------------------------------------------------------------------------------->
+Mit der Funktion `my_tang` können die Eulerwinkel bestimmt werden, die benötigt werden um einen Vektor vom Inertialsystem in ein Körperkoordinatensystem (ausgerichtet zum Tangentialvektor) zu drehen.
+
+
+#### Syntax
+`[phi_tz, phi_ty, phi_tx, ta] = my_tang(v, t)`
+
+#### Parameter
+* `v` 3D-Vektor der linearen Geschwindigkeit
+* `t` Zeit 
+* `phi_tz` 1D-Vektor für z-Komponente der Euler-Winkel
+* `phi_ty` 1D-Vektor für y-Komponente der Euler-Winkel 
+* `phi_tx` 1D-Vektor für x-Komponente der Euler-Winkel
+* `ta` 3D-Vektor für Tangentialvektor
+
+#### Beispiel
+```Matlab
+% time
+t_start = 0; % s
+t_stop = 5; % s
+t_step = 0.005; % s
+
+t = (t_start:t_step:t_stop); % s
+
+% frequency
+f = 1; % Hz
+
+% trajectory
+sx = @(t) (0.8 * 5 .* cos(2*pi*f*t)); % m
+sy = @(t) (0.8 * 5 .* sin(2*pi*f*t)); % m
+sz = @(t) (0.3 * 5 .* cos(2*pi*f*t)); % m
+
+% calculate lineare
+[s, vRef, aRef] = my_lin(s,"num",t);
+
+% calculate tang
+[phi_tz, phi_ty, phi_tx, ta] = my_tang(vRef, t);
+```
+
+
+### Winkel Größen `my_ang` <!-------------------------------------------------------------------------------------------->
+Mit der Funktion `my_ang` werden die Winkelgeschwindigkeit $\vec{\omega}(t)$ und Winkelbeschleunigung $\vec{\alpha}(t)$ anhand der Euler-Winkel $\vec{\varphi}(t)$ bestimmt.
+Dazu werden die Gleichungen xx und xx angewandt.
+
+#### Syntax
+`[phi_calc, omega_calc, alpha_calc] = my_ang(phi, option, t_)`
+
+#### Parameter
+* `phi` 3D-Vektor oder Cell mit 3 Vektorfunktionen der Eulerwinkel
+* `option` String: `'num'` oder `'sym'` zur auswahl für nummerische oder symbolische Berechnung 
+* `t_` 1D-Zeitvektor
+* `phi_calc` Berechneter 3D-Vektor für die Euler-Winkel (im nummerischen fall ident mit `s`)
+* `omega_calc` Berechneter 3D-Vektor für die Winkelgeschwindigkeit
+* `alpha_calc` Berechneter 3D-Vektor für die Winkelbeschleunigung
+
+#### Beispiel
+
+##### Nummerisch
+```Matlab
+% time
+t_start = 0; % s
+t_stop = 5; % s
+t_step = 0.005; % s
+
+t = (t_start:t_step:t_stop); % s
+
+% frequency
+f = 1; % Hz
+
+% trajectory
+sx = @(t) (0.8 * 5 .* cos(2*pi*f*t)); % m
+sy = @(t) (0.8 * 5 .* sin(2*pi*f*t)); % m
+sz = @(t) (0.3 * 5 .* cos(2*pi*f*t)); % m
+
+% calculate lineare
+[s, vRef, aRef] = my_lin(s,"num",t);
+```
+
+##### Symbolisch
+```Matlab
+% time
+t_start = 0; % s
+t_stop = 5; % s
+t_step = 0.005; % s
+
+t = (t_start:t_step:t_stop); % s
+
+% frequency
+f = 1; % Hz
+
+% trajectory
+sx = @(t) (0.8 .* cos(2*pi*f*t)); % m
+sy = @(t) (0.8 .* sin(2*pi*f*t)); % m
+sz = @(t) (0.3 .* cos(2*pi*f*t)); % m
+
+s = {sx, sy, sz};
+
+% calculate lineare
+[s, vRef, aRef] = my_lin(s,"sym",t);
+```
+
+### IMU Größen `my_imu` <!-------------------------------------------------------------------------------------------->
+
+
+
 
 * [my_lin](my_lin.md)
 * [my_tang](my_tang.md)
