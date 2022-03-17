@@ -73,7 +73,7 @@ aRef = aRef + [0,0,9.81];
 [aB] = my_rotate(phi, aRef, t);
 
 % calculate IMU data
-r = [1,0,0]; %m distance form center of mass to imu
+r = [-150e-3,-150e-3,50e-3]./2; %m distance form center of mass to imu
 [aIMU] = my_imu(aB, omega_B, alpha_B, r, t);
 
 %% plots

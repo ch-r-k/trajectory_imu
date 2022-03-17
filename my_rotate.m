@@ -1,4 +1,4 @@
-function [aB] = my_rotate(phi, aRef, t)
+function [aB] = my_rotate(phi, aN, t)
 
     aB = zeros(length(t),3);
     
@@ -14,7 +14,7 @@ function [aB] = my_rotate(phi, aRef, t)
 
         R = Rz*Ry*Rx;
     
-        aB(it,:) = (R * aRef(it,:).').'; 
+        aB(it,:) = (R * aN(it,:).').'; 
     end
     
     

@@ -12,7 +12,7 @@ pdf_print() {
         --csl="${ASSETSDIR}/citation-style.csl" \
         --from="markdown+tex_math_single_backslash+tex_math_dollars+raw_tex" \
         --to="latex" \
-        --highlight-style mytheme.theme \
+        --highlight-style layouts/mytheme.theme \
         --output="${BUILDDIR}/output_print.pdf" \
         --include-in-header="layouts/print.tex"
 }

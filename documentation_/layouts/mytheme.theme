@@ -166,10 +166,10 @@
             "underline": false
         },
         "Comment": {
-            "text-color": "#60a0b0",
+            "text-color": "#006400",
             "background-color": null,
             "bold": false,
-            "italic": true,
+            "italic": false,
             "underline": false
         },
         "CommentVar": {
