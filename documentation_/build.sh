@@ -14,8 +14,23 @@ pdf_print() {
         --to="latex" \
         --highlight-style layouts/mytheme.theme \
         --output="${BUILDDIR}/output_print.pdf" \
+        --filter pandoc-eqnos \
         --include-in-header="layouts/print.tex"
 }
+
+html() {
+    mkdir "${BUILDDIR}" -p
+    pandoc "${CONTENTDIR}/${FILENAME}.md" \
+    --filter pandoc-eqnos \
+    --from="markdown+tex_math_single_backslash+tex_math_dollars+raw_tex" \
+    --mathml \
+    --to=html5 \
+    --output="${BUILDDIR}/${FILENAME}.html" \
+    --standalone \
+    --highlight-style layouts/mytheme.theme
+}
+
+
 
 pdf_ereader() {
     mkdir "${BUILDDIR}" -p

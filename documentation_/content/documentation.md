@@ -99,7 +99,7 @@ $$
 		\varphi_y \\
 		\varphi_z \\
 	\end{bmatrix}
-$$
+$$ {#eq:euler_winkel}
 Es wird unterschieden zwischen den klassischen Euler-Winkeln und den Tait-Bryan-Winkeln, wobei diese wieder in unterschiedliche Konventionen eingeteilt werden können.
 
 ![Darstellung der Tait-Bryan-Winkel nach z-y-x (intrinsisch) Konvention \label{fig:euler_ang}](img/02_eulerangle/eulerangle.pdf)
@@ -137,22 +137,27 @@ $$
 			0 &  \sin(\varphi_x) & \cos(\varphi_x)   
 		\end{bmatrix}
 	}_{\mathbf{R_x}(\varphi_x)}
-$$
+$$ {#eq:Drehmatrix}
 Um einen Vektor vom Inertialsystem $\mathbb{N}$ in das Körpersystem $\mathbb{B}$ (Rotation des Punktes) zu transformieren, wird der zu rotierende Vektor $\vec{v}_{\mathbb{N}} = (v_x, v_y, v_z)^T$ mit der Drehmatrix $\mathbf{R}(\vec{\varphi})$ multipliziert:
 $$
 	\vec{v}_{\mathbb{B}} = \mathbf{R}(\vec{\varphi}) \cdot \vec{v}_{\mathbb{N}}
-$$
+$$ {#eq:Drehmatrix_rot1}
 Die Indizes geben dabei das Koordinatensystem des jeweiligen Vektors an.
 Soll ein Vektor vom Körpersystem in das Inertialsystem (Rotation des Koordinatensystems) transformiert werden, muss der zu rotierende Vektor mit der inversen Drehmatrix multipliziert werden:
 $$
 	\vec{v}_{\mathbb{B}} = \left(\mathbf{R}(\vec{\varphi})\right)^{-1} \cdot \vec{v}_{\mathbb{N}}
-$$
+$$ {#eq:Drehmatrix_rot2}
 
 ## Bestimmung der abgeleiteten Größen
 Um die Geschwindigkeit oder die Beschleunigung zu bestimmen muss der Weg durch Differenzieren nach der Zeit bestimmt werden:
 
-$$\vec{v}(t) = \frac{\mathrm{d}\vec{s}(t)}{\mathrm{d} t}$$
-$$\vec{a}(t) = \frac{\mathrm{d}\vec{v}(t)}{\mathrm{d} t}$$
+$$
+	\vec{v}(t) = \frac{\mathrm{d}\vec{s}(t)}{\mathrm{d} t}
+$$ {#eq:geschwindigkeit}
+
+$$
+	\vec{a}(t) = \frac{\mathrm{d}\vec{v}(t)}{\mathrm{d} t}
+$$ {#eq:beschleunigung}
 
 Die Winkelgeschwindigkeit wird nicht über die Euler-Winkel, sondern über die Rotationsmatrix bestimmt:
 
@@ -163,13 +168,13 @@ $$
     -\omega_y(t) & \omega_x(t)  &  0           \\
 \end{bmatrix} = 
 \mathbf{\Omega}(t) = \frac{\mathrm{d} \mathbf{R}(t)}{\mathrm{d} t} \mathbf{R}(t)^{-1}
-$$
+$$ {#eq:winkelgeschwindigkeit}
 
 Anschließend kann die Winkelbeschleunigung mit anschließendem differenzieren gewonnen werden:
 
 $$
 \vec{\alpha}(t) = \frac{\mathrm{d}\vec{\omega}(t)}{\mathrm{d} t}
-$$
+$$ {#eq:winkelbeschleunigung}
  
 Mit Matlab kann die Differentiation sowohl symbolisch (mit der Symbolic Math Toolbox) als auch nummerisch (mit der Funktion `x_ = gradient(x,t)`) durchgeführt werden
 
@@ -177,7 +182,7 @@ Mit Matlab kann die Differentiation sowohl symbolisch (mit der Symbolic Math Too
 Um die Daten der IMU (am Punkt $I$) anhand der Größen am Schwerpunkt $S$ zu bestimmen, kann folgende kinematische Beziehung angewandt werden:
 $$
 	\vec{a_I}(t) = \vec{a_S}(t) + \vec{\omega}(t) \times \left( \vec{\omega}(t) \times \vec{r} \right) + \vec{\alpha}(t) \times \vec{r}
-$$
+$$ {#eq:kinematisch}
 Die einzelnen Größen können folgendermaßen interpretiert werden:
 
 * $\vec{a_S}$ ist die Beschleunigung im Schwerpunkt $S$ und setzt sich aus Gravitationsbeschleunigung $\vec{g}$ und linearer Beschleunigung $\vec{a_\mathrm{l}}$ zusammen.
@@ -193,7 +198,7 @@ Im Nachfolgendem werden die einzelnen Funktionen beschrieben, um Daten einer IMU
 ## Lineare Größen `my_lin`
 
 Mit der Funktion `my_lin` werden die lineare Geschwindigkeit $\vec{v}(t)$ und lineare Beschleunigung $\vec{a}(t)$ anhand der Trajektorie $\vec{s}(t)$ bestimmt.
-Dazu werden die Gleichungen xx und xx angewandt.
+Dazu werden die Gleichungen @eq:geschwindigkeit und @eq:beschleunigung angewandt.
 
 ### Syntax
 `[s_calc, v_calc, a_calc] = my_lin(s, option, t_)`
@@ -211,48 +216,48 @@ Dazu werden die Gleichungen xx und xx angewandt.
 #### Nummerisch
 
 ```Matlab
-% time
+%% Zeit
 t_start = 0; % s
 t_stop = 5; % s
 t_step = 0.005; % s
 
 t = (t_start:t_step:t_stop); % s
 
-% frequency
+%% Frequenz
 f = 1; % Hz
 
-% trajectory
+%% Trajektorie
 sx = 0.8 * 5 .* cos(2*pi*f*t); % m
 sy = 0.8 * 5 .* sin(2*pi*f*t); % m
 sz = 0.3 * 5 .* cos(2*pi*f*t); % m
 
 s = [sx', sy', sz'];
 
-% calculate lineare
+%% Berechnung lineare Größen
 [s, v, a] = my_lin(s,"num",t);
 ```
 
 #### Symbolisch
 
 ```Matlab
-% time
+%% Zeit
 t_start = 0; % s
 t_stop = 5; % s
 t_step = 0.005; % s
 
 t = (t_start:t_step:t_stop); % s
 
-% frequency
+%% Frequenz
 f = 1; % Hz
 
-% trajectory
+%% Trajektorie
 sx = @(t) (0.8 .* cos(2*pi*f*t)); % m
 sy = @(t) (0.8 .* sin(2*pi*f*t)); % m
 sz = @(t) (0.3 .* cos(2*pi*f*t)); % m
 
 s = {sx, sy, sz};
 
-% calculate lineare
+%% Berechnung lineare Größen
 [s, v, a] = my_lin(s,"sym",t);
 ```
 
@@ -274,34 +279,34 @@ Mit der Funktion `my_tang` können die Euler-Winkel bestimmt werden, die benöti
 
 ### Beispiel
 ```Matlab
-% time
+%% Zeit
 t_start = 0; % s
 t_stop = 5; % s
 t_step = 0.005; % s
 
 t = (t_start:t_step:t_stop); % s
 
-% frequency
+%% Frequenz
 f = 1; % Hz
 
-% trajectory
+%% Trajektorie
 sx = 0.8 * 5 .* cos(2*pi*f*t); % m
 sy = 0.8 * 5 .* sin(2*pi*f*t); % m
 sz = 0.3 * 5 .* cos(2*pi*f*t); % m
 
 s = [sx', sy', sz'];
 
-% calculate lineare
-[s, v, a = my_lin(s,"num",t);
+%% Berechnung lineare Größen
+[s, v, a] = my_lin(s,"num",t);
 
-% calculate tang
-[phi_tz, phi_ty, phi_tx, ta] = my_tang(vRef, t);
+%% Berechnung Tangentialwinkel
+[phi_tz, phi_ty, phi_tx, ta] = my_tang(v, t);
 ```
 
 ## Winkel Größen `my_ang` 
 
 Mit der Funktion `my_ang` werden die Winkelgeschwindigkeit $\vec{\omega}(t)$ und Winkelbeschleunigung $\vec{\alpha}(t)$ anhand der Euler-Winkel $\vec{\varphi}(t)$ bestimmt.
-Dazu werden die Gleichungen xx und xx angewandt.
+Dazu werden die Gleichungen @eq:winkelgeschwindigkeit und @eq:winkelbeschleunigung angewandt.
 
 ### Syntax
 `[phi_calc, omega_calc, alpha_calc] = my_ang(phi, option, t_)`
@@ -318,54 +323,54 @@ Dazu werden die Gleichungen xx und xx angewandt.
 
 #### Nummerisch
 ```Matlab
-% time
+%% Zeit
 t_start = 0; % s
 t_stop = 5; % s
 t_step = 0.005; % s
 
 t = (t_start:t_step:t_stop); % s
 
-% frequency
+%% Frequenz
 f = 1; % Hz
 
-% trajectory
+%% Trajektorie
 phix = 0 .* t; % rad
 phiy = 0 .* t; % rad
 phiz = 0.3 .* cos(2*pi*f*t); % rad
 
-s = [phix', phiy', phiz'];
+phi = [phix', phiy', phiz'];
 
-% calculate angular
+%% Berechnung Winkelgrößen
 [phi, omega, alpha] = my_ang(phi,"num",t);
 ```
 
 #### Symbolisch
 ```Matlab
-% time
+%% Zeit
 t_start = 0; % s
 t_stop = 5; % s
 t_step = 0.005; % s
 
 t = (t_start:t_step:t_stop); % s
 
-% frequency
+%% Frequenz
 f = 1; % Hz
 
-% trajectory
+%% Trajektorie
 phix = @(t) (0.8 .* cos(2*pi*f*t)); % m
 phiy = @(t) (0.8 .* sin(2*pi*f*t)); % m
 phiz = @(t) (0.3 .* cos(2*pi*f*t)); % m
 
-phi = {sx, sy, sz};
+phi = {phix, phiy, phiz};
 
-% calculate angular
+%% Berechnung Winkelgrößen
 [phi, omega, alpha] = my_ang(phi,"sym",t);
 ```
 
 ## Rotation `my_rotate`
 
 Mit der Funktion `my_rotate` können Punkte oder Vektoren von einem Koordinatensystem (z.B. das Inertialsystem) in ein anderes Koordinatensystem (z.B. das Körperkoordinatensystem gedreht werden).
-Dazu kann Gleichung xx verwendet werden.
+Dazu wird (@eq:Drehmatrix) und (@eq:Drehmatrix_rot1) verwendet.
 
 ### Syntax
 `[aB] = my_rotate(phi, aN, t)`
@@ -379,14 +384,14 @@ Dazu kann Gleichung xx verwendet werden.
 
 ### Beispiel
 ```Matlab
-%% time
+%% Zeit
 t_start = 0; % s
 t_stop = 5; % s
 t_step = 0.005; % s
 
 t = (t_start:t_step:t_stop); % s
 
-%% Frequent
+%% Frequenz
 f = 1; % Hz
 
 %% Trajektorie
@@ -397,13 +402,13 @@ sz = 0.3 * 5 .* cos(2*pi*f*t); % m
 s = [sx', sy', sz'];
 
 %% Berechnung lineare Größen
-[s_N, v_N, a_N = my_lin(s,"num",t);
+[s_N, v_N, a_N] = my_lin(s,"num",t);
 % lineare Größen im Schwerpunkt S und referenzerit auf das Inertialsystem N
 
-%% Berechnung Tangential Winkel
-[phi_tz, phi_ty, phi_tx, ta] = my_tang(vRef, t);
+%% Berechnung Tangentialwinkel
+[phi_tz, phi_ty, phi_tx, ta] = my_tang(v_N, t);
 
-phi = [phi_tx', phi_ty', phi_tz'];
+phi = [phi_tx, phi_ty, phi_tz];
 
 %% Rotation der lineare Beschleunigung
 [a_B] = my_rotate(phi, a_N, t); 
@@ -412,7 +417,7 @@ phi = [phi_tx', phi_ty', phi_tz'];
 
 ## IMU Größen `my_imu`
 Mit der Funktion `my_imu` können anhand der Größen im Schwerpunkt $S$ die Winkelgeschwindigkeit und die lineare Beschleunigung im Punkt $I$ bestimmt werden.
-Dazu kann Gleichung xx verwendet werden.
+Dazu kann Gleichung @eq:kinematisch verwendet werden.
 Damit die Daten aus der Sicht der IMU bestimmt werden müssen Größen im Schwerpunkt $S$ ins Körperkoordinatensystem $\mathbb{B}$ gedreht werden.
 Dazu kann die Funktion `my_rot` verwendet werden.
 
@@ -429,14 +434,14 @@ Dazu kann die Funktion `my_rot` verwendet werden.
 
 ### Beispiel
 ```Matlab
-%% time
+%% Zeit
 t_start = 0; % s
 t_stop = 5; % s
 t_step = 0.005; % s
 
 t = (t_start:t_step:t_stop); % s
 
-%% Frequent
+%% Frequenz
 f = 1; % Hz
 
 %% Trajektorie
@@ -450,13 +455,13 @@ s = [sx', sy', sz'];
 r = [-150e-3,-150e-3,50e-3]./2; % m
 
 %% Berechnung lineare Größen
-[s_S_N, v_S_N, a_S_N = my_lin(s,"num",t);
+[s_S_N, v_S_N, a_S_N] = my_lin(s,"num",t);
 % lineare Größen im Schwerpunkt S und referenzerit auf das Inertialsystem N
 
-%% Berechnung Tangential Winkel
-[phi_tz, phi_ty, phi_tx, ta] = my_tang(vRef, t);
+%% Berechnung Tangentialwinkel
+[phi_tz, phi_ty, phi_tx, ta] = my_tang(v_S_N, t);
 
-phi = [phi_tx', phi_ty', phi_tz'];
+phi = [phi_tx, phi_ty, phi_tz];
 
 %% Berechnung Wineklgrößen
 [phi, omega, alpha] = my_ang(phi,"num",t); 
@@ -467,13 +472,10 @@ phi = [phi_tx', phi_ty', phi_tz'];
 % lineare Beschleunigung im Schwerpunkt S und referenzerit auf das Körperkoorinatensystem B
 
 %% Berechnung IMU Daten
-[a_I_B] = my_imu(a_S_B, omega, alpha, r, t)
+[a_I_B] = my_imu(a_S_B, omega, alpha, r, t);
 
 % a_I_B entspricht gemessenen Beschleunigung der IMU
 a_IMU = a_I_B;
 % omega entspricht der gemessenen Winkelgeschwindigkeit der IMU
 omega_IMU = omega; 
 ```
-
-
-
