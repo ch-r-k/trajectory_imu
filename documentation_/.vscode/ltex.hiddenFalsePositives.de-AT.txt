@@ -1,0 +1,13 @@
+{"rule":"AUSTRIAN_GERMAN_SPELLER_RULE","sentence":"^\\Q\\newpage\\E$"}
+{"rule":"DE_CASE","sentence":"^\\QGrundlagen\nBevor näher auf die Algorithmen eingegangen wird, werdend die Grundlagen beschrieben, die im Weiteren von Bedeutung sind.\\E$"}
+{"rule":"DE_CASE","sentence":"^\\QEuler-Winkel\nDie Euler-Winkel beschreiben die Drehlage/Orientierung eines Körpers durch 3 Winkel \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q, \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q und \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q der jeweiligen Achse.\\E$"}
+{"rule":"DE_CASE","sentence":"^\\QBestimmung der abgeleiteten Größen\nUm die Geschwindigkeit oder die Beschleunigung zu bestimmen muss der Weg durch Differenzieren nach der Zeit bestimmt werden:\\E$"}
+{"rule":"DE_CASE","sentence":"^\\QMechanische Grundlagen\nUm die Daten der IMU (am Punkt \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q) anhand der Größen am Schwerpunkt \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q zu bestimmen, kann folgende kinematische Beziehung angewandt werden:\\E$"}
+{"rule":"AUSTRIAN_GERMAN_SPELLER_RULE","sentence":"^\\Q\\vec{\\alpha}(t) = \\frac{\\mathrm{d}\\vec{\\omega}(t)}{\\mathrm{d} t} $$ {#eq:winkelbeschleunigung}\\E$"}
+{"rule":"AUSTRIAN_GERMAN_SPELLER_RULE","sentence":"^\\QBeispiel einer Trajektorie mit einer IMU \\label{fig:trajectory}\\E$"}
+{"rule":"AUSTRIAN_GERMAN_SPELLER_RULE","sentence":"^\\QUm dies zu Verdeutlichen wird in der Abbildung \\ref{fig:trajectory} die oben definierte Trajektorie abgebildet.\\E$"}
+{"rule":"AUSTRIAN_GERMAN_SPELLER_RULE","sentence":"^\\QENU bedeutet East, North, Up (also Osten, Norden, oben) und beschreibt die Richtung der Koordinaten-Achsen (Osten \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q, Norden \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q und oben \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q).\\E$"}
+{"rule":"DE_CASE","sentence":"^\\QOrientierung im dreidimensionalen Raum mithilfe von Euler-Winkeln und Drehmatrizen\nUm die Orientierung von Körpern zu beschreiben werden Euler-Winkel verwendet.\\E$"}
+{"rule":"AUSTRIAN_GERMAN_SPELLER_RULE","sentence":"^\\Q$$ {#eq:Drehmatrix_rot2}\\E$"}
+{"rule":"AUSTRIAN_GERMAN_SPELLER_RULE","sentence":"^\\Q$$ {#eq:beschleunigung}\\E$"}
+{"rule":"AUSTRIAN_GERMAN_SPELLER_RULE","sentence":"^\\QMit Matlab kann die Differentiation sowohl symbolisch (mit der Symbolic Math Toolbox) als auch nummerisch (mit der Funktion \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q) durchgeführt werden\\E$"}
