@@ -190,6 +190,17 @@ Die einzelnen Größen können folgendermaßen interpretiert werden:
 * $\vec{\alpha}(t) \times \vec{r}$ entspricht der Euler-Kraft und entsteht durch eine beschleunigte Drehung des starren Körpers mit der Winkelbeschleunigung $\vec{\alpha}(t)$.
 * $\vec{a_I}$ ist die resultierende Beschleunigung an der Punkt der IMU.
 
+## Tangentialvektor / Tangentialwinkel
+In den meisten Fällen ist es üblich, dass bewegte Fahrzeuge (Autos, Flugzeuge) tangential zur Trajektorie ausgerichtet sind (bei Drohen ist das nicht der Fall).
+Der Tangentialvektor kann über die lineare Geschwindigkeit $\vec{v}(t)$ bestimmt werden:
+
+$$
+	\vec{t}(t) = \frac{\vec{v}(t)}{|\vec{v}(t)|}
+$${#eq:tang}
+
+Anhand dieses Vektors können die Euler-Winkel bestimmt werden die eine Rotation zwischen dem Inertialsystem und dem Tangentialvektor beschreibt.
+Da es sich aber nur um einen Vektor handel können nur zwei der drei Euler-Winkel gefunden werden, der dritte Euler-Winkel wird $0$ gesetzt.
+
 \newpage
 
 # Funktionen
