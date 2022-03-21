@@ -8,6 +8,7 @@ pdf_print() {
     mkdir "${BUILDDIR}" -p
     echo "Creating pdf-print output"
     pandoc "${CONTENTDIR}/${FILENAME}.md" \
+        --toc -V toc-title:"Inhaltsverzeichnis" \
         --resource-path="${CONTENTDIR}" \
         --csl="${ASSETSDIR}/citation-style.csl" \
         --from="markdown+tex_math_single_backslash+tex_math_dollars+raw_tex" \

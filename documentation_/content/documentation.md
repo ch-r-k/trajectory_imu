@@ -6,6 +6,7 @@ bibliography: "bibliography.bib"
 link-citations: true
 urlcolor: "blue"
 geometry: margin=2cm
+csl: "https://raw.githubusercontent.com/citation-style-language/styles/master/harvard-anglia-ruskin-university.csl"
 ---
 
 \newpage
@@ -192,14 +193,26 @@ Die einzelnen Größen können folgendermaßen interpretiert werden:
 
 ## Tangentialvektor / Tangentialwinkel
 In den meisten Fällen ist es üblich, dass bewegte Fahrzeuge (Autos, Flugzeuge) tangential zur Trajektorie ausgerichtet sind (bei Drohen ist das nicht der Fall).
-Der Tangentialvektor kann über die lineare Geschwindigkeit $\vec{v}(t)$ bestimmt werden:
+Der Tangentialvektor $\vec{t}(t) = (t_x(t), t_y(t), t_z(t))^T$ kann über die lineare Geschwindigkeit $\vec{v}(t)$ bestimmt werden:
 
 $$
 	\vec{t}(t) = \frac{\vec{v}(t)}{|\vec{v}(t)|}
 $${#eq:tang}
 
-Anhand dieses Vektors können die Euler-Winkel bestimmt werden die eine Rotation zwischen dem Inertialsystem und dem Tangentialvektor beschreibt.
-Da es sich aber nur um einen Vektor handel können nur zwei der drei Euler-Winkel gefunden werden, der dritte Euler-Winkel wird $0$ gesetzt.
+Anhand dieses Vektors können die Euler-Winkel bestimmt werden die eine Rotation zwischen dem Inertialsystem und dem Tangentialvektor $\vec{t}(t)$ beschreibt.
+Da es sich aber nur um einen Vektor handel können nur zwei der drei Euler-Winkel ($\varphi_z$ und $\varphi_y$) gefunden werden, der dritte Euler-Winkel ($\varphi_x$) wird $0$ gesetzt:
+
+$$
+	\varphi_z(t) = \mathrm{atan2}(t_y(t), t_x(t))
+$${#eq:tang_z}
+
+$$
+	\varphi_y(t) = -\mathrm{asin} \left( \frac{t_z(t)}{|\vec{t}(t)|} \right)
+$${#eq:tang_y}
+
+$$
+	\varphi_x(t) = 0
+$${#eq:tang_x} 
 
 \newpage
 
@@ -209,7 +222,7 @@ Im Nachfolgendem werden die einzelnen Funktionen beschrieben, um Daten einer IMU
 ## Lineare Größen `my_lin`
 
 Mit der Funktion `my_lin` werden die lineare Geschwindigkeit $\vec{v}(t)$ und lineare Beschleunigung $\vec{a}(t)$ anhand der Trajektorie $\vec{s}(t)$ bestimmt.
-Dazu werden die Gleichungen @eq:geschwindigkeit und @eq:beschleunigung angewandt.
+Dazu werden (@eq:geschwindigkeit) und (@eq:beschleunigung) angewandt.
 
 ### Syntax
 `[s_calc, v_calc, a_calc] = my_lin(s, option, t_)`
@@ -275,7 +288,7 @@ s = {sx, sy, sz};
 ## Tangentialwinkel `my_tang`
 
 Mit der Funktion `my_tang` können die Euler-Winkel bestimmt werden, die benötigt werden um einen Vektor vom Inertialsystem in ein Körperkoordinatensystem (ausgerichtet zum Tangentialvektor) zu drehen.
-
+Dazu werden (@eq:tang) - (@eq:tang_x) angewandt.
 
 ### Syntax
 `[phi_tz, phi_ty, phi_tx, ta] = my_tang(v, t)`
@@ -317,7 +330,7 @@ s = [sx', sy', sz'];
 ## Winkel Größen `my_ang` 
 
 Mit der Funktion `my_ang` werden die Winkelgeschwindigkeit $\vec{\omega}(t)$ und Winkelbeschleunigung $\vec{\alpha}(t)$ anhand der Euler-Winkel $\vec{\varphi}(t)$ bestimmt.
-Dazu werden die Gleichungen @eq:winkelgeschwindigkeit und @eq:winkelbeschleunigung angewandt.
+Dazu werden (@eq:winkelgeschwindigkeit) und (@eq:winkelbeschleunigung) angewandt.
 
 ### Syntax
 `[phi_calc, omega_calc, alpha_calc] = my_ang(phi, option, t_)`
@@ -428,7 +441,7 @@ phi = [phi_tx, phi_ty, phi_tz];
 
 ## IMU Größen `my_imu`
 Mit der Funktion `my_imu` können anhand der Größen im Schwerpunkt $S$ die Winkelgeschwindigkeit und die lineare Beschleunigung im Punkt $I$ bestimmt werden.
-Dazu kann Gleichung @eq:kinematisch verwendet werden.
+Dazu kann (@eq:kinematisch) verwendet werden.
 Damit die Daten aus der Sicht der IMU bestimmt werden müssen Größen im Schwerpunkt $S$ ins Körperkoordinatensystem $\mathbb{B}$ gedreht werden.
 Dazu kann die Funktion `my_rot` verwendet werden.
 
@@ -490,3 +503,7 @@ a_IMU = a_I_B;
 % omega entspricht der gemessenen Winkelgeschwindigkeit der IMU
 omega_IMU = omega; 
 ```
+
+\newpage
+
+# Beispiele

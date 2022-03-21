@@ -11,3 +11,5 @@
 {"rule":"AUSTRIAN_GERMAN_SPELLER_RULE","sentence":"^\\Q$$ {#eq:Drehmatrix_rot2}\\E$"}
 {"rule":"AUSTRIAN_GERMAN_SPELLER_RULE","sentence":"^\\Q$$ {#eq:beschleunigung}\\E$"}
 {"rule":"AUSTRIAN_GERMAN_SPELLER_RULE","sentence":"^\\QMit Matlab kann die Differentiation sowohl symbolisch (mit der Symbolic Math Toolbox) als auch nummerisch (mit der Funktion \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q) durchgeführt werden\\E$"}
+{"rule":"AUSTRIAN_GERMAN_SPELLER_RULE","sentence":"^\\Q$${#eq:tang_y}\\E$"}
+{"rule":"AUSTRIAN_GERMAN_SPELLER_RULE","sentence":"^\\Q$${#eq:tang}\\E$"}
