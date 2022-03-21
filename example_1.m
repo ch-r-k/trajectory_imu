@@ -8,7 +8,7 @@ clc
 
 % time
 t_start = 0; % s
-t_stop = 5; % s
+t_stop = 1; % s
 t_step = 0.01; % s
 
 % trajectorie

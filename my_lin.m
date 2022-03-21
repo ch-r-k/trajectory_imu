@@ -49,9 +49,9 @@ function [s_calc, v_calc, a_calc] = my_lin(s,option, t_)
         vz = gradient(sz,t_);
         
         % acceleration
-        ax = gradient(vx,t_);
-        ay = gradient(vy,t_);
-        az = gradient(vz,t_);
+        ax = 4*del2(sx,t_);
+        ay = 4*del2(sy,t_);
+        az = 4*del2(sz,t_);
         
         s_calc = [sx, sy, sz];
         v_calc = [vx, vy, vz];
