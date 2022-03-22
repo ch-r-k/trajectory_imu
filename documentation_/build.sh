@@ -33,18 +33,10 @@ html() {
 
 
 
-pdf_ereader() {
+pdf_test() {
     mkdir "${BUILDDIR}" -p
-    echo "Creating pdf-ereader output"
-    pandoc "${CONTENTDIR}/${FILENAME}.md" \
-        --resource-path="${CONTENTDIR}" \
-        --citeproc \
-        --csl="${ASSETSDIR}/citation-style.csl" \
-        --from="markdown+tex_math_single_backslash+tex_math_dollars+raw_tex" \
-        --to="latex" \
-        --output="${BUILDDIR}/output_ereader.pdf" \
-        --pdf-engine="xelatex" \
-        --include-in-header="layouts/ereader.tex"
+    echo "Creating pdf-print output"
+    pandoc "${CONTENTDIR}/${FILENAME}.md" --filter pandoc-include -o output.pdf
 }
 
 # Allows to call a function based on arguments passed to the script

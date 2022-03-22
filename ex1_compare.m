@@ -49,27 +49,43 @@ phi_s = {phix_s, phiy_s, phiz_s};
 %% Berechnung Winkelrößen symbolisch
 [phi_s, omega_s, alpha_s] = my_ang(phi_s,"sym",t);
 
-%%
-[phi_tz, phi_ty, phi_tx, ta] = my_tang(v_n, t);
+%% Differenz zwischen symbolische und nummerische Berechnung
+figure
+subplot(2,2,1)
+plot(t, abs(v_n-v_s)./max(v_s) .* 100)
+xlabel('t')
+ylabel('Fehler v(t) in %')
+legend('x','y','z');
+ylim([0,2])
 
-%%
+subplot(2,2,2)
+plot(t, abs(a_s - a_n)./max(v_s).*100)
+xlabel('t')
+ylabel('Fehler a(t) in %')
+legend('x','y','z');
+ylim([0,2])
+
+subplot(2,2,3)
+plot(t, abs(omega_n-omega_s)./max(v_s).*100)
+xlabel('t')
+ylabel('Fehler \omega(t) in %')
+legend('x','y','z');
+ylim([0,2])
+
+subplot(2,2,4)
+plot(t, abs(alpha_s - alpha_n)./max(v_s).*100)
+xlabel('t')
+ylabel('Fehler \alpha(t) in %')
+legend('x','y','z');
+ylim([0,2])
+
+%% Animation
 body.width  = 150e-3;
 body.length = 150e-3;
-body.heigth = 50e-3 ;
-body.r = [-150e-3,-150e-3,50e-3]./2;
+body.heigth = 50e-3;
+body.r = [0,0,0];
 
 figure
 tmr = my_traAnim(t, s_s, phi_s, body);
-
-%%
-start(tmr);
-
-
-%%
-figure
-plot(t, omega_n-omega_s)
-
-%%
-figure
-plot(t, alpha_s - alpha_n)
-
+%start(tmr);
+%stop(tmr);
